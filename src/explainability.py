@@ -87,21 +87,16 @@ def generate_shap_analysis():
     
     # Also create a detailed beeswarm plot for better visualization
     print("Generating detailed SHAP beeswarm plot...")
-    plt.figure(figsize=(12, 8))
-    
-    # For beeswarm, we can use the mean SHAP values across classes
-    shap_values_mean = shap_values.mean(axis=2)  # Shape: (n_samples, n_features)
-    
-    # Use shap.summary_plot with plot_type='beeswarm'
-    shap.summary_plot(shap_values_mean, X_test_scaled, feature_names=feature_names, 
-                      plot_type="beeswarm", show=False)
-    
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(10, 6))
+
+    # Pass show=False to prevent SHAP from clearing the canvas
+    shap.plots.beeswarm(shap_values[:, :, 0], show=False)
+
     beeswarm_path = outputs_dir / "shap_beeswarm_detailed.png"
-    plt.tight_layout()
     plt.savefig(beeswarm_path, dpi=300, bbox_inches='tight')
+    plt.close()
     print(f"✓ SHAP beeswarm plot saved to {beeswarm_path}")
-    
-    plt.close('all')
     
     print("\n" + "="*60)
     print("SHAP ANALYSIS COMPLETE")
